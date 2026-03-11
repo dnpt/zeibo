@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaxMate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@700&display=swap" rel="stylesheet" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font-family: 'Overpass Mono', monospace;
+        background-color: white;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .container {
+        background-color: white;
+        position: relative;
+        width: 100%;
+        max-width: 440px;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .content {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        gap: 64px;
+        align-items: center;
+        left: 50%;
+        top: calc(50% - 10px);
+        transform: translate(-50%, -50%);
+        width: 440px;
+      }
+
+      .shredder-container {
+        position: relative;
+        width: 240px;
+        height: 240px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .shredder-sprite {
+        width: 64px;
+        height: 128px;
+        background-size: 256px 384px;
+        background-repeat: no-repeat;
+        image-rendering: pixelated;
+        transform: scale(3.5);
+        transform-origin: center;
+        animation: shredder-anim 2s steps(1) infinite;
+        background-image: url('./28152e256c90de94688c82c076a28e393eb19931.png');
+      }
+
+      @keyframes shredder-anim {
+        0%   { background-position: 0 0; }
+        10%  { background-position: -64px 0; }
+        20%  { background-position: -128px 0; }
+        30%  { background-position: -192px 0; }
+        40%  { background-position: 0 -128px; }
+        50%  { background-position: -64px -128px; }
+        60%  { background-position: -128px -128px; }
+        70%  { background-position: -192px -128px; }
+        80%  { background-position: 0 -256px; }
+        90%  { background-position: -64px -256px; }
+        100% { background-position: 0 0; }
+      }
+
+      .stats { position: relative; width: 100%; flex-shrink: 0; }
+
+      .stats-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0 24px;
+        position: relative;
+        width: 100%;
+      }
+
+      .stat-row {
+        display: flex;
+        align-items: flex-start;
+        padding: 18px 0;
+        position: relative;
+        width: 100%;
+        flex-shrink: 0;
+      }
+
+      .stat-row-border {
+        position: absolute;
+        border-bottom: 2px solid #222220;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+      }
+
+      .stat-row:last-child .stat-row-border { border: none; }
+
+      .stat-label-container {
+        flex: 1 1 0;
+        height: 20px;
+        min-height: 1px;
+        min-width: 1px;
+        position: relative;
+        flex-shrink: 0;
+      }
+
+      .stat-label {
+        position: absolute;
+        font-family: 'Overpass Mono', monospace;
+        font-weight: 700;
+        line-height: 20px;
+        left: 0;
+        color: #222220;
+        font-size: 24px;
+        white-space: nowrap;
+        top: 0.5px;
+        letter-spacing: -0.1504px;
+      }
+
+      .stat-value {
+        font-family: 'Overpass Mono', monospace;
+        font-weight: 700;
+        line-height: 20px;
+        position: relative;
+        flex-shrink: 0;
+        color: #222220;
+        font-size: 24px;
+        white-space: nowrap;
+        text-align: right;
+        letter-spacing: -0.1504px;
+      }
+
+      .stat-value-fixed { width: 74px; }
+
+      .stat-row-last {
+        display: flex;
+        align-items: flex-start;
+        padding: 18px 0;
+        position: relative;
+        width: 100%;
+        flex-shrink: 0;
+      }
+
+      .stat-label-last {
+        flex: 1 1 0;
+        font-family: 'Overpass Mono', monospace;
+        font-weight: 700;
+        line-height: 20px;
+        min-height: 1px;
+        min-width: 1px;
+        position: relative;
+        flex-shrink: 0;
+        color: #222220;
+        font-size: 24px;
+        letter-spacing: -0.1504px;
+      }
+
+      .stat-value-last {
+        flex: 1 1 0;
+        font-family: 'Overpass Mono', monospace;
+        font-weight: 700;
+        line-height: 20px;
+        min-height: 1px;
+        min-width: 1px;
+        position: relative;
+        flex-shrink: 0;
+        color: #222220;
+        font-size: 24px;
+        text-align: right;
+        letter-spacing: -0.1504px;
+      }
+
+      .footer {
+        position: absolute;
+        font-family: 'Overpass Mono', monospace;
+        font-weight: 700;
+        line-height: 20px;
+        left: 50%;
+        color: #b7b7b7;
+        font-size: 24px;
+        text-align: center;
+        white-space: nowrap;
+        bottom: 50px;
+        letter-spacing: -0.1504px;
+        transform: translateX(-50%);
+      }
+
+      .loading { opacity: 0.3; transition: opacity 0.3s; }
+      .loaded { opacity: 1; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="content">
+        <div class="shredder-container">
+          <div class="shredder-sprite"></div>
+        </div>
+
+        <div class="stats">
+          <div class="stats-inner">
+            <div class="stat-row">
+              <div class="stat-row-border" aria-hidden="true"></div>
+              <div class="stat-label-container">
+                <p class="stat-label">Processed</p>
+              </div>
+              <p class="stat-value loading" id="processed">—</p>
+            </div>
+
+            <div class="stat-row">
+              <div class="stat-row-border" aria-hidden="true"></div>
+              <div class="stat-label-container">
+                <p class="stat-label">Success</p>
+              </div>
+              <p class="stat-value stat-value-fixed loading" id="success">—</p>
+            </div>
+
+            <div class="stat-row-last">
+              <p class="stat-label-last">Time Saved</p>
+              <p class="stat-value-last loading" id="timeSaved">—</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="footer">Zeibo v.1.0</p>
+    </div>
+
+    <script>
+      var API_URL = "https://script.google.com/macros/s/AKfycbyww_AsO6dRsgH7VfTAK7zlSGc-cPX4w_hai5e5QvxB0-3s63i1-jzKd7LQ293hdCvV/exec";
+
+      async function loadStats() {
+        try {
+          var res = await fetch(API_URL);
+          var data = await res.json();
+
+          var processed = document.getElementById("processed");
+          var success = document.getElementById("success");
+          var timeSaved = document.getElementById("timeSaved");
+
+          processed.textContent = data.processed;
+          success.textContent = data.successRate + "%";
+          timeSaved.textContent = data.timeSaved;
+
+          processed.classList.remove("loading");
+          processed.classList.add("loaded");
+          success.classList.remove("loading");
+          success.classList.add("loaded");
+          timeSaved.classList.remove("loading");
+          timeSaved.classList.add("loaded");
+        } catch (err) {
+          console.error("Failed to load stats:", err);
+        }
+      }
+
+      loadStats();
+    </script>
+  </body>
+</html>
